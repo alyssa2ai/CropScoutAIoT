@@ -37,19 +37,112 @@ recommendations = {
 # --- Firebase Initialization (Cached) ---
 @st.cache_resource
 def init_firebase():
-    if not firebase_admin._apps:
-        cred = credentials.Certificate("firebase_credentials.json")
-        firebase_admin.initialize_app(cred)
-    return firestore.client()
+    # If firebase already initialized, return the real client
+    if firebase_admin._apps:
+        return firestore.client()
+
+    # If firebase credentials file exists, initialize real Firebase
+    import os
+    # Try multiple ways to load credentials (path env var, raw JSON env var, streamlit secrets)
+    cred_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", None)
+    if cred_path and os.path.exists(cred_path):
+        try:
+            cred = credentials.Certificate(cred_path)
+            firebase_admin.initialize_app(cred)
+            return firestore.client()
+        except Exception as e:
+            st.warning(f"Error initializing Firebase with {cred_path}: {e}. Trying other credential sources.")
+
+    # If raw JSON for credentials was provided via env var
+    raw_json = os.environ.get("FIREBASE_CREDENTIALS", None)
+    if raw_json:
+        try:
+            import json
+            cred_dict = json.loads(raw_json)
+            cred = credentials.Certificate(cred_dict)
+            firebase_admin.initialize_app(cred)
+            return firestore.client()
+        except Exception as e:
+            st.warning(f"Error initializing Firebase from FIREBASE_CREDENTIALS env var: {e}. Trying Streamlit secrets or falling back.")
+
+    # Try Streamlit secrets (st.secrets.firebase should be a dict or JSON string)
+    try:
+        if hasattr(st, 'secrets') and st.secrets and "firebase" in st.secrets:
+            firebase_secret = st.secrets["firebase"]
+            if isinstance(firebase_secret, str):
+                import json
+                firebase_secret = json.loads(firebase_secret)
+            cred = credentials.Certificate(firebase_secret)
+            firebase_admin.initialize_app(cred)
+            return firestore.client()
+    except Exception as e:
+        st.warning(f"Error initializing Firebase from Streamlit secrets: {e}. Falling back to in-memory stub.")
+
+    # Graceful fallback: create a minimal in-memory Firestore-like stub
+    st.warning("firebase_credentials.json not found in copy — using an in-memory stub for Firestore. No remote reads/writes will occur.")
+
+    class CollectionStub:
+        def __init__(self, name):
+            self.name = name
+            self._docs = []
+
+        def where(self, *args, **kwargs):
+            # Return self to allow chaining .where(...).where(...)
+            return self
+
+        def stream(self):
+            # Return an iterator of zero documents
+            return iter([])
+
+        def add(self, doc):
+            # Store added documents in memory (no persistence)
+            self._docs.append(doc)
+            return (None, None)
+
+    class DBStub:
+        def __init__(self):
+            self._collections = {}
+
+        def collection(self, name):
+            if name not in self._collections:
+                self._collections[name] = CollectionStub(name)
+            return self._collections[name]
+
+    return DBStub()
 
 db = init_firebase()
 
 # --- Model Loading (Cached) ---
 @st.cache_resource
 def load_model():
-    model_path = "New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/trained_model.keras"
-    model = tf.keras.models.load_model(model_path)
-    return model
+    # Prefer a local models/ directory in the copy. This keeps the original project untouched.
+    model_path_candidates = [
+        "models/trained_model.keras",
+        "models/my_model.keras",
+        "models/my_model.h5",
+        "New Plant Diseases Dataset(Augmented)/New Plant Diseases Dataset(Augmented)/trained_model.keras",
+    ]
+    model_path = None
+    import os
+    for p in model_path_candidates:
+        if os.path.exists(p):
+            model_path = p
+            break
+    # If the trained model file is missing in this copy, return a small stub model
+    try:
+        if model_path is None:
+            raise FileNotFoundError("No model found in candidates: " + str(model_path_candidates))
+        model = tf.keras.models.load_model(model_path)
+        return model
+    except (IOError, OSError, ValueError, tf.errors.NotFoundError, FileNotFoundError) as e:
+        st.warning("Trained model not found in copy — using a dummy model that always predicts class 0. Uploading images will return the first class.")
+
+        class ModelStub:
+            def predict(self, _image_array):
+                # Return a single-sample prediction where class 0 has probability 1.0
+                return np.array([[1.0]])
+
+        return ModelStub()
 
 model = load_model()
 
@@ -85,8 +178,12 @@ app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recogn
 
 if app_mode == "Home":
     st.header("PLANT DISEASE RECOGNITION SYSTEM")
-    st.image("home_page.jpeg", use_container_width=True)
-    st.markdown("""Welcome to my Plant Disease Recognition System! \ud83c\udf3f\ud83d\udd0d...""")
+    import os
+    if os.path.exists("home_page.jpeg"):
+        st.image("home_page.jpeg", use_container_width=True)
+    else:
+        st.info("home_page.jpeg not found in this copy. Upload or place it next to main.py to display the homepage image.")
+    st.markdown("Welcome to my Plant Disease Recognition System!")
 
 elif app_mode == "About":
     st.header("About The Project")
