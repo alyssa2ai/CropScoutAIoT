@@ -1,0 +1,29 @@
+# Ignore large model and dataset files
+*.h5
+*.keras
+*.pb
+
+# Ignore images and archives
+*.jpeg
+*.jpg
+*.png
+*.zip
+*.tar.gz
+
+# Ignore Python environment folders
+venv/
+venv_tf/
+__pycache__/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore dataset folders and trained model directories
+"New Plant Diseases Dataset(Augmented)/"
+
+# Ignore firebase credentials and other secrets
+firebase_credentials.json
+
+# Ignore system files
+.DS_Store
+Thumbs.db
