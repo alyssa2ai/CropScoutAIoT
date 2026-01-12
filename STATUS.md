@@ -7,6 +7,7 @@
 ## ✅ COMPLETED FEATURES
 
 ### 1. Core Application
+
 - ✅ **Streamlit Web App** - Fully functional UI with multiple pages
 - ✅ **Disease Recognition Model** - CNN trained on 87K+ images, 38 disease classes
 - ✅ **Image Preprocessing** - Correct preprocessing (0-255 range, no normalization)
@@ -14,6 +15,7 @@
 - ✅ **Predictions** - Shows top 3 diseases with confidence scores
 
 ### 2. Multi-Page Navigation
+
 - ✅ **Home Page** - Welcome and overview
 - ✅ **Disease Recognition** - Disease detection with AI predictions
 - ✅ **Live Monitoring** - ESP32-CAM live feed via Supabase
@@ -22,6 +24,7 @@
 - ✅ **About** - Complete project documentation
 
 ### 3. Gamification System
+
 - ✅ **Points System** - +10 points per prediction
 - ✅ **Streak Tracking** - Daily consecutive predictions
 - ✅ **Badges** - Achievement unlocks
@@ -29,12 +32,14 @@
 - ✅ **Persistent Storage** - Firebase/JSON storage
 
 ### 4. Multi-Language Support
+
 - ✅ **English** - Full UI and content
 - ✅ **Hindi (हिंदी)** - UI translations
 - ✅ **Kannada (ಕನ್ನಡ)** - UI translations
 - ✅ **Read Aloud** - Text-to-speech in all languages
 
 ### 5. File Organization
+
 - ✅ **core/** - Main app logic (main.py, model_handler.py, app.py)
 - ✅ **data/** - Class names and disease information
 - ✅ **features/** - Gamification system
@@ -42,6 +47,7 @@
 - ✅ **pdarduinocode/** - Arduino/ESP32 code for camera
 
 ### 6. Launcher & Documentation
+
 - ✅ **run.py** - Main entry point
 - ✅ **streamlit_app.py** - Dashboard with Supabase integration
 - ✅ **start_app.bat** - Windows batch launcher
@@ -49,6 +55,7 @@
 - ✅ **README.md** - Comprehensive documentation
 
 ### 7. Bug Fixes
+
 - ✅ **Model Normalization Fix** - Removed incorrect /255 normalization
 - ✅ **Image Preprocessing** - Correct 128×128 resizing
 - ✅ **Prediction Display** - Shows actual confidence (not hardcoded 0.85)
@@ -59,24 +66,28 @@
 ## 🚀 TO DO / Future Enhancements
 
 ### 1. Model Improvements
+
 - [ ] Retrain model with more data for better accuracy
 - [ ] Add confidence thresholds for uncertain predictions
 - [ ] Implement model version control
 - [ ] Add model explainability (visualization of important features)
 
 ### 2. Backend Enhancements
+
 - [ ] Database optimization for leaderboard queries
 - [ ] Async image processing for faster predictions
 - [ ] API rate limiting and throttling
 - [ ] User authentication and login system
 
 ### 3. Frontend Improvements
+
 - [ ] Mobile-responsive design
 - [ ] Dark mode UI
 - [ ] Custom color themes
 - [ ] Accessibility improvements (WCAG compliance)
 
 ### 4. Features
+
 - [ ] Batch image upload
 - [ ] Disease history tracking per user
 - [ ] Email/SMS alerts for high-risk predictions
@@ -84,6 +95,7 @@
 - [ ] Integration with weather API for contextual predictions
 
 ### 5. Deployment
+
 - [ ] Deploy to Streamlit Cloud
 - [ ] Docker containerization
 - [ ] AWS/Google Cloud setup
@@ -91,6 +103,7 @@
 - [ ] CI/CD pipeline
 
 ### 6. Marketplace
+
 - [ ] Real payment gateway integration
 - [ ] Seller rating system
 - [ ] Product reviews and comments
@@ -98,18 +111,21 @@
 - [ ] Dispute resolution system
 
 ### 7. Live Monitoring
+
 - [ ] Real-time notifications on disease detection
 - [ ] Multiple camera feed support
 - [ ] Video recording capability
 - [ ] Advanced analytics dashboard
 
 ### 8. Testing & QA
+
 - [ ] Unit tests for model predictions
 - [ ] Integration tests for UI flows
 - [ ] Load testing for concurrent users
 - [ ] User acceptance testing (UAT)
 
 ### 9. Documentation
+
 - [ ] API documentation (Swagger/OpenAPI)
 - [ ] Model training guide
 - [ ] Deployment guide
@@ -117,6 +133,7 @@
 - [ ] Video tutorials
 
 ### 10. Community & Support
+
 - [ ] GitHub Issues template
 - [ ] Contributing guidelines
 - [ ] Community forum
@@ -126,16 +143,16 @@
 
 ## 📊 Project Statistics
 
-| Metric | Value |
-|--------|-------|
-| **Model Size** | 90 MB (trained_model.h5) |
-| **Disease Classes** | 38 |
-| **Training Images** | 87,000+ |
-| **Supported Languages** | 3 (English, Hindi, Kannada) |
-| **App Pages** | 6 (Home, Disease Recognition, Live Monitoring, Market Prices, Marketplace, About) |
-| **Core Files** | 3 (main.py, model_handler.py, app.py) |
-| **Data Files** | 2 (class_names.py, disease_insights.py) |
-| **Feature Modules** | 1 (stats_manager.py) |
+| Metric                  | Value                                                                             |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| **Model Size**          | 90 MB (trained_model.h5)                                                          |
+| **Disease Classes**     | 38                                                                                |
+| **Training Images**     | 87,000+                                                                           |
+| **Supported Languages** | 3 (English, Hindi, Kannada)                                                       |
+| **App Pages**           | 6 (Home, Disease Recognition, Live Monitoring, Market Prices, Marketplace, About) |
+| **Core Files**          | 3 (main.py, model_handler.py, app.py)                                             |
+| **Data Files**          | 2 (class_names.py, disease_insights.py)                                           |
+| **Feature Modules**     | 1 (stats_manager.py)                                                              |
 
 ---
 
@@ -201,4 +218,4 @@ streamlit run core/main.py
 
 ---
 
-*Last commit: December 22, 2025*
+_Last commit: December 22, 2025_
