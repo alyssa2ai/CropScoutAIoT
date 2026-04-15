@@ -4,9 +4,24 @@ Uses a lightweight model that can classify diseases correctly
 """
 
 import numpy as np
-import tensorflow as tf
-from tensorflow import keras
 import os
+
+try:
+    import tensorflow as tf
+    from tensorflow import keras
+except Exception:
+    tf = None
+    keras = None
+
+
+class NoTensorflowModel:
+    """Fallback predictor used when TensorFlow is not available."""
+
+    def predict(self, image_array, verbose=0):
+        batch_size = 1
+        if hasattr(image_array, "shape") and len(image_array.shape) > 0:
+            batch_size = int(image_array.shape[0])
+        return np.ones((batch_size, 38), dtype=np.float32) / 38.0
 
 class SimpleDiseaseCNN:
     """Simple CNN model for plant disease classification"""
@@ -17,6 +32,8 @@ class SimpleDiseaseCNN:
     
     def _build_model(self):
         """Build a simple but effective CNN model"""
+        if keras is None:
+            raise RuntimeError("TensorFlow is not available in this environment")
         model = keras.Sequential([
             keras.layers.Input(shape=(128, 128, 3)),
             keras.layers.Rescaling(1./255),
@@ -92,6 +109,10 @@ def get_or_create_model(model_path="models/disease_cnn.keras"):
     Returns:
         Loaded or newly created model
     """
+    if keras is None:
+        print("⚠️ TensorFlow unavailable. Using fallback predictor.")
+        return NoTensorflowModel()
+
     try:
         # Check if model already exists
         if os.path.exists(model_path):
@@ -187,7 +208,7 @@ class ModelPredictor:
     
     def get_disease_name(self, class_index):
         """Get disease name from class index"""
-        from class_names import CLASS_NAMES
+        from data.class_names import CLASS_NAMES
         if 0 <= class_index < len(CLASS_NAMES):
             return CLASS_NAMES[class_index]
         return f"Unknown (Class {class_index})"
