@@ -380,6 +380,7 @@ def t(key: str) -> str:
 
 st.sidebar.title(t('dashboard'))
 app_mode = st.sidebar.selectbox(t('select_page'), [t('home'), t('about'), t('disease_recognition'), t('live_monitoring'), 'Market Prices', 'Marketplace'])
+is_kn = lang == 'kn'
 
 # --- Enhanced Gamification & Animation Theme ---
 components.html("""
@@ -600,80 +601,155 @@ if app_mode == t('home'):
     else:
         st.info("Leaderboard will appear as farmers use the app.")
 
-elif app_mode == "About":
-    st.header("About KrishiMitra – CropScout AI-oT")
-    st.markdown(
-        """
-        ### 🌾 Overview
-        KrishiMitra helps farmers identify plant diseases from leaf images using a deep-learning model trained on the New Plant Diseases Dataset (Augmented). The app also includes live monitoring (ESP32‑CAM), marketplace tools, market prices, gamification, and multi‑language support.
+elif app_mode == t('about'):
+    if is_kn:
+        st.header("KrishiMitra ಬಗ್ಗೆ – CropScout AI-oT")
+        st.markdown(
+            """
+            ### 🌾 ಅವಲೋಕನ
+            KrishiMitra ಎಲೆಗಳ ಚಿತ್ರಗಳಿಂದ ಸಸ್ಯ ರೋಗಗಳನ್ನು ಗುರುತಿಸಲು ಸಹಾಯ ಮಾಡುವ AI ವೇದಿಕೆ. ಇದು New Plant Diseases Dataset (Augmented) ಮೇಲೆ ತರಬೇತಿ ಪಡೆದ deep-learning ಮಾದರಿಯನ್ನು ಬಳಸುತ್ತದೆ. ಈ ಅಪ್ಲಿಕೇಶನ್‌ನಲ್ಲಿ live monitoring (ESP32‑CAM), marketplace ಉಪಕರಣಗಳು, market prices, gamification, ಮತ್ತು ಬಹುಭಾಷಾ ಬೆಂಬಲವೂ ಇದೆ.
 
-        ---
+            ---
 
-        ### 🧠 How it works (high‑level)
-        1. You upload a leaf image (or use the live camera feed)
-        2. The image is resized to 128×128 and converted to an RGB array
-        3. The model predicts probabilities across 38 disease classes
-        4. The top results, confidence and treatment insights are shown
+            ### 🧠 ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ (ಉನ್ನತ ಮಟ್ಟದಲ್ಲಿ)
+            1. ನೀವು ಒಂದು ಎಲೆ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡುತ್ತೀರಿ (ಅಥವಾ live camera feed ಬಳಸ್ತೀರಿ)
+            2. ಚಿತ್ರವನ್ನು 128×128 ಗೆ resize ಮಾಡಿ RGB array ಆಗಿ ಮಾರ್ಪಡಿಸಲಾಗುತ್ತದೆ
+            3. ಮಾದರಿ 38 ರೋಗ ವರ್ಗಗಳ ಮೇಲೆ probabilities ಅನ್ನು ಊಹಿಸುತ್ತದೆ
+            4. ಮೇಲಿನ ಫಲಿತಾಂಶಗಳು, confidence, ಮತ್ತು ಚಿಕಿತ್ಸೆ ಮಾಹಿತಿ ತೋರಿಸಲಾಗುತ್ತದೆ
 
-        Notes:
-        - This model expects images in the 0‑255 pixel range (no /255 normalization)
-        - Input shape: 128×128×3 (RGB)
-        - Output classes: 38 plant diseases (see Disease Recognition for full list)
+            ಟಿಪ್ಪಣಿಗಳು:
+            - ಈ model ಗೆ 0‑255 pixel range ಚಿತ್ರಗಳು ಬೇಕು (/255 normalization ಬೇಡ)
+            - Input shape: 128×128×3 (RGB)
+            - Output classes: 38 ಸಸ್ಯ ರೋಗಗಳು (ಪೂರ್ಣ ಪಟ್ಟಿಗೆ Disease Recognition ನೋಡಿ)
 
-        ---
+            ---
 
-        ### 📚 Dataset
-        - New Plant Diseases Dataset (Augmented)
-        - ~87K RGB images across 38 classes
-        - Train/Validation split preserved by folder structure
+            ### 📚 ಡೇಟಾಸೆಟ್
+            - New Plant Diseases Dataset (Augmented)
+            - 38 ವರ್ಗಗಳಲ್ಲಿ ಸುಮಾರು 87K RGB ಚಿತ್ರಗಳು
+            - Train/Validation ವಿಭಾಗವನ್ನು folder structure ಮೂಲಕ ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ
 
-        Reference inspiration: animesh1012/machineLearning – Plant_Disease_Prediction
+            Reference inspiration: animesh1012/machineLearning – Plant_Disease_Prediction
 
-        ---
+            ---
 
-        ### ✨ App features
-        - 🔍 Disease Recognition: AI predictions with confidence and top‑k results
-        - 📡 Live Monitoring: ESP32‑CAM image feed (Supabase storage integration)
-        - 💰 Market Prices: quick glance at current trends
-        - 🛒 Marketplace: simple buyer/seller flow
-        - 🌍 Multi‑language UI (English / Hindi / Kannada) + Read‑Aloud
-        - 🎮 Gamification: points, streaks, badges, leaderboard
+            ### ✨ ಅಪ್ಲಿಕೇಶನ್ ವೈಶಿಷ್ಟ್ಯಗಳು
+            - 🔍 Disease Recognition: confidence ಮತ್ತು top‑k ಫಲಿತಾಂಶಗಳೊಂದಿಗೆ AI ಊಹೆಗಳು
+            - 📡 Live Monitoring: ESP32‑CAM image feed (Supabase storage integration)
+            - 💰 Market Prices: ಪ್ರಸ್ತುತ ಪ್ರವೃತ್ತಿಗಳ ತ್ವರಿತ ನೋಟ
+            - 🛒 Marketplace: ಸರಳ ಖರೀದಿದಾರ/ಮಾರಾಟಗಾರ ಹರಿವು
+            - 🌍 ಬಹುಭಾಷಾ UI (English / Hindi / Kannada) + Read‑Aloud
+            - 🎮 Gamification: points, streaks, badges, leaderboard
 
-        ---
+            ---
 
-        ### ✅ Best practices for accurate results
-        - Capture clear, well‑lit images of a single leaf
-        - Keep the leaf centered with minimal background clutter
-        - Avoid blur and strong shadows
-        - Try multiple angles if the first result seems uncertain
+            ### ✅ ನಿಖರ ಫಲಿತಾಂಶಗಳಿಗಾಗಿ ಉತ್ತಮ ಅಭ್ಯಾಸಗಳು
+            - ಒಂದೇ ಎಲೆಯ ಸ್ಪಷ್ಟ, ಚೆನ್ನಾಗಿ ಬೆಳಕಿರುವ ಚಿತ್ರಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ
+            - ಎಲೆಯನ್ನು ಮಧ್ಯದಲ್ಲಿ ಇರಿಸಿ, ಹಿನ್ನೆಲೆಯ ಗೊಂದಲವನ್ನು ಕಡಿಮೆ ಮಾಡಿ
+            - blur ಮತ್ತು ಬಲವಾದ ನೆರಳುಗಳನ್ನು ತಪ್ಪಿಸಿ
+            - ಮೊದಲ ಫಲಿತಾಂಶ ಖಚಿತವಾಗದಿದ್ದರೆ ಬೇರೆ ಕೋನಗಳಿಂದ ಪ್ರಯತ್ನಿಸಿ
 
-        ---
+            ---
 
-        ### ⚠️ Responsible use
-        - This tool supports decision‑making; always confirm with an agronomist when in doubt
-        - Environmental conditions and look‑alike symptoms can affect results
+            ### ⚠️ ಜವಾಬ್ದಾರಿಯುತ ಬಳಕೆ
+            - ಈ ಸಾಧನವು ನಿರ್ಧಾರ ತೆಗೆದುಕೊಳ್ಳಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ; ಅನುಮಾನವಿದ್ದರೆ ಯಾವಾಗಲೂ ಕೃಷಿ ತಜ್ಞರನ್ನು ಸಂಪರ್ಕಿಸಿ
+            - ಪರಿಸರ ಸ್ಥಿತಿಗಳು ಮತ್ತು ಹೋಲಿಕೆಯ ಲಕ್ಷಣಗಳು ಫಲಿತಾಂಶಗಳ ಮೇಲೆ ಪರಿಣಾಮ ಬೀರುತ್ತವೆ
 
-        ---
+            ---
 
-        ### 🛠️ Tech stack
-        - Streamlit UI, TensorFlow/Keras model
-        - Firebase/JSON for stats, Supabase for ESP32‑CAM images
-        - Python ecosystem: NumPy, Pillow, Pandas, Plotly
+            ### 🛠️ ತಾಂತ್ರಿಕ ಘಟಕಗಳು
+            - Streamlit UI, TensorFlow/Keras model
+            - Firebase/JSON for stats, Supabase for ESP32‑CAM images
+            - Python ecosystem: NumPy, Pillow, Pandas, Plotly
 
-        ---
+            ---
 
-        ### 🙌 Credits & Acknowledgements
-        - Dataset: New Plant Diseases Dataset (Augmented)
-        - Community inspiration: animesh1012/machineLearning (Plant_Disease_Prediction)
-        - Open‑source libraries and the Streamlit community
+            ### 🙌 ಕ್ರೆಡಿಟ್ಸ್ ಮತ್ತು ಧನ್ಯವಾದಗಳು
+            - Dataset: New Plant Diseases Dataset (Augmented)
+            - Community inspiration: animesh1012/machineLearning (Plant_Disease_Prediction)
+            - Open‑source libraries ಮತ್ತು Streamlit community
 
-        ---
+            ---
 
-        ### 📞 Support
-        - See the README for setup and troubleshooting
-        - If predictions look off, ensure the trained model file is in place and that images are uploaded as clear 128×128 RGB crops (no manual normalization required)
-        """
-    )
+            ### 📞 ಬೆಂಬಲ
+            - Setup ಮತ್ತು troubleshooting ಗಾಗಿ README ನೋಡಿ
+            - Predictions ತಪ್ಪಾಗಿ ಕಾಣಿಸಿದರೆ, trained model file ಇದ್ದು, ಚಿತ್ರಗಳು ಸ್ಪಷ್ಟವಾದ 128×128 RGB crops ಆಗಿವೆ ಎಂಬುದನ್ನು ಖಚಿತಪಡಿಸಿ (manual normalization ಅಗತ್ಯವಿಲ್ಲ)
+            """
+        )
+    else:
+        st.header("About KrishiMitra – CropScout AI-oT")
+        st.markdown(
+            """
+            ### 🌾 Overview
+            KrishiMitra helps farmers identify plant diseases from leaf images using a deep-learning model trained on the New Plant Diseases Dataset (Augmented). The app also includes live monitoring (ESP32‑CAM), marketplace tools, market prices, gamification, and multi‑language support.
+
+            ---
+
+            ### 🧠 How it works (high‑level)
+            1. You upload a leaf image (or use the live camera feed)
+            2. The image is resized to 128×128 and converted to an RGB array
+            3. The model predicts probabilities across 38 disease classes
+            4. The top results, confidence and treatment insights are shown
+
+            Notes:
+            - This model expects images in the 0‑255 pixel range (no /255 normalization)
+            - Input shape: 128×128×3 (RGB)
+            - Output classes: 38 plant diseases (see Disease Recognition for full list)
+
+            ---
+
+            ### 📚 Dataset
+            - New Plant Diseases Dataset (Augmented)
+            - ~87K RGB images across 38 classes
+            - Train/Validation split preserved by folder structure
+
+            Reference inspiration: animesh1012/machineLearning – Plant_Disease_Prediction
+
+            ---
+
+            ### ✨ App features
+            - 🔍 Disease Recognition: AI predictions with confidence and top‑k results
+            - 📡 Live Monitoring: ESP32‑CAM image feed (Supabase storage integration)
+            - 💰 Market Prices: quick glance at current trends
+            - 🛒 Marketplace: simple buyer/seller flow
+            - 🌍 Multi‑language UI (English / Hindi / Kannada) + Read‑Aloud
+            - 🎮 Gamification: points, streaks, badges, leaderboard
+
+            ---
+
+            ### ✅ Best practices for accurate results
+            - Capture clear, well‑lit images of a single leaf
+            - Keep the leaf centered with minimal background clutter
+            - Avoid blur and strong shadows
+            - Try multiple angles if the first result seems uncertain
+
+            ---
+
+            ### ⚠️ Responsible use
+            - This tool supports decision‑making; always confirm with an agronomist when in doubt
+            - Environmental conditions and look‑alike symptoms can affect results
+
+            ---
+
+            ### 🛠️ Tech stack
+            - Streamlit UI, TensorFlow/Keras model
+            - Firebase/JSON for stats, Supabase for ESP32‑CAM images
+            - Python ecosystem: NumPy, Pillow, Pandas, Plotly
+
+            ---
+
+            ### 🙌 Credits & Acknowledgements
+            - Dataset: New Plant Diseases Dataset (Augmented)
+            - Community inspiration: animesh1012/machineLearning (Plant_Disease_Prediction)
+            - Open‑source libraries and the Streamlit community
+
+            ---
+
+            ### 📞 Support
+            - See the README for setup and troubleshooting
+            - If predictions look off, ensure the trained model file is in place and that images are uploaded as clear 128×128 RGB crops (no manual normalization required)
+            """
+        )
 
 elif app_mode == t('disease_recognition'):
     st.header(t('disease_recognition'))
@@ -982,30 +1058,33 @@ elif app_mode == 'Market Prices':
             st.success(f'Alert set for {crop} at ₹{target:.2f} — (note: alerts are demo-only in this copy).')
 
 elif app_mode == 'Marketplace':
-    st.header('🌾 Zero-Fee Marketplace (Sellers & Buyers)')
+    if is_kn:
+        st.header('🌾 ಶೂನ್ಯ-ಶುಲ್ಕ ಮಾರುಕಟ್ಟೆ (ಮಾರಾಟಗಾರರು ಮತ್ತು ಖರೀದಿದಾರರು)')
+    else:
+        st.header('🌾 Zero-Fee Marketplace (Sellers & Buyers)')
     
     # Create two tabs: Sellers and Buyers
-    tab1, tab2 = st.tabs(["👨‍🌾 Seller Listings", "🛒 Buyer Demands"])
+    tab1, tab2 = st.tabs(["👨‍🌾 Seller Listings", "🛒 Buyer Demands"] if not is_kn else ["👨‍🌾 ಮಾರಾಟಗಾರರ ಪಟ್ಟಿಗಳು", "🛒 ಖರೀದಿದಾರರ ಬೇಡಿಕೆಗಳು"])
     
     # ============ SELLER TAB ============
     with tab1:
-        st.markdown('### 👨‍🌾 Sell Your Produce (Free - No Commission!)')
-        st.markdown('Post what you have to sell. Buyers can find and contact you directly.')
+        st.markdown('### 👨‍🌾 ನಿಮ್ಮ ಉತ್ಪನ್ನವನ್ನು ಮಾರಾಟ ಮಾಡಿ (ಉಚಿತ - ಯಾವುದೇ ಕಮಿಷನ್ ಇಲ್ಲ!)' if is_kn else '### 👨‍🌾 Sell Your Produce (Free - No Commission!)')
+        st.markdown('ನಿಮ್ಮ ಬಳಿ ಇರುವುದನ್ನು ಮಾರಾಟಕ್ಕೆ ಹಾಕಿ. ಖರೀದಿದಾರರು ನಿಮ್ಮನ್ನು ನೇರವಾಗಿ ಹುಡುಕಿ ಸಂಪರ್ಕಿಸಬಹುದು.' if is_kn else 'Post what you have to sell. Buyers can find and contact you directly.')
         
-        with st.expander('➕ Create a Seller Listing'):
+        with st.expander('➕ ಮಾರಾಟಗಾರರ ಪಟ್ಟಿ ರಚಿಸಿ' if is_kn else '➕ Create a Seller Listing'):
             with st.form('seller_form'):
-                st.write("**Your Contact Info**")
-                seller_name = st.text_input('Your name', key='seller_name')
-                seller_phone = st.text_input('Your phone number', key='seller_phone')
+                st.write("**ನಿಮ್ಮ ಸಂಪರ್ಕ ಮಾಹಿತಿ**" if is_kn else "**Your Contact Info**")
+                seller_name = st.text_input('ನಿಮ್ಮ ಹೆಸರು' if is_kn else 'Your name', key='seller_name')
+                seller_phone = st.text_input('ನಿಮ್ಮ ದೂರವಾಣಿ ಸಂಖ್ಯೆ' if is_kn else 'Your phone number', key='seller_phone')
                 
-                st.write("**What You're Selling**")
-                crop = st.text_input('Crop/Product (e.g., Tomato, Apple)', key='seller_crop')
-                qty = st.number_input('Quantity (kg)', min_value=1, key='seller_qty')
-                price = st.number_input('Asking price (₹ per kg)', min_value=0.0, format='%.2f', key='seller_price')
-                region = st.text_input('Region (e.g., South India - Karnataka)', key='seller_region')
-                description = st.text_area('Description (quality, variety, etc.)', key='seller_desc')
+                st.write("**ನೀವು ಏನು ಮಾರುತ್ತಿದ್ದಾರೆ**" if is_kn else "**What You're Selling**")
+                crop = st.text_input('ಬೆಳೆ/ಉತ್ಪನ್ನ (ಉದಾ., ಟೊಮೇಟೋ, ಆಪಲ್)' if is_kn else 'Crop/Product (e.g., Tomato, Apple)', key='seller_crop')
+                qty = st.number_input('ಪ್ರಮಾಣ (ಕೆಜಿ)' if is_kn else 'Quantity (kg)', min_value=1, key='seller_qty')
+                price = st.number_input('ಕೋರಿದ ಬೆಲೆ (₹ ಪ್ರತಿ ಕೆಜಿ)' if is_kn else 'Asking price (₹ per kg)', min_value=0.0, format='%.2f', key='seller_price')
+                region = st.text_input('ಪ್ರದೇಶ (ಉದಾ., ದಕ್ಷಿಣ ಭಾರತ - ಕರ್ನಾಟಕ)' if is_kn else 'Region (e.g., South India - Karnataka)', key='seller_region')
+                description = st.text_area('ವಿವರಣೆ (ಗುಣಮಟ್ಟ, ಜಾತಿ ಇತ್ಯಾದಿ)' if is_kn else 'Description (quality, variety, etc.)', key='seller_desc')
                 
-                post = st.form_submit_button('✅ Post Listing (FREE!)')
+                post = st.form_submit_button('✅ ಪಟ್ಟಿ ಪ್ರಕಟಿಸಿ (ಉಚಿತ!)' if is_kn else '✅ Post Listing (FREE!)')
                 if post and seller_name and seller_phone and crop and qty and price and region:
                     listing = {
                         'type': 'seller',
@@ -1020,15 +1099,15 @@ elif app_mode == 'Marketplace':
                     }
                     try:
                         db.collection('market_listings').add(listing)
-                        st.success(f'✅ Your listing posted! Buyers can contact you at {seller_phone}')
+                        st.success(f'✅ ನಿಮ್ಮ ಪಟ್ಟಿ ಪ್ರಕಟವಾಗಿದೆ! ಖರೀದಿದಾರರು {seller_phone} ನಲ್ಲಿ ಸಂಪರ್ಕಿಸಬಹುದು.' if is_kn else f'✅ Your listing posted! Buyers can contact you at {seller_phone}')
                     except Exception as e:
-                        st.info('Listing saved locally (demo mode)')
+                        st.info('ಪಟ್ಟಿ ಸ್ಥಳೀಯವಾಗಿ ಉಳಿಸಲಾಗಿದೆ (ಡೇಮೋ ಮೋಡ್)' if is_kn else 'Listing saved locally (demo mode)')
                         st.write(listing)
                 elif post:
-                    st.error('⚠️ Please fill all required fields!')
+                    st.error('⚠️ ದಯವಿಟ್ಟು ಅಗತ್ಯವಿರುವ ಎಲ್ಲ ಕ್ಷೇತ್ರಗಳನ್ನು ತುಂಬಿರಿ!' if is_kn else '⚠️ Please fill all required fields!')
         
         st.markdown('---')
-        st.markdown('### 📋 Current Seller Listings')
+        st.markdown('### 📋 ಪ್ರಸ್ತುತ ಮಾರಾಟಗಾರರ ಪಟ್ಟಿಗಳು' if is_kn else '### 📋 Current Seller Listings')
         try:
             docs = db.collection('market_listings').where('type', '==', 'seller').stream()
             listings = [d.to_dict() for d in docs]
@@ -1038,39 +1117,45 @@ elif app_mode == 'Marketplace':
                     with col1:
                         st.write(f"**{listing.get('crop', 'Product')}** - {listing.get('qty')}kg @ ₹{listing.get('price')}/kg")
                         st.write(f"📍 {listing.get('region', 'Unknown region')}")
-                        st.write(f"**Seller:** {listing.get('seller_name', 'Unknown')} | **Phone:** {listing.get('seller_phone', 'N/A')}")
+                        st.write(f"**ಮಾರಾಟಗಾರ:** {listing.get('seller_name', 'Unknown')} | **ದೂರವಾಣಿ:** {listing.get('seller_phone', 'N/A')}" if is_kn else f"**Seller:** {listing.get('seller_name', 'Unknown')} | **Phone:** {listing.get('seller_phone', 'N/A')}")
                         if listing.get('description'):
                             st.write(f"*{listing.get('description')}*")
                     with col2:
                         st.write(f"📅 {listing.get('timestamp', 'N/A')[:10]}")
                     st.divider()
             else:
-                st.info('📭 No seller listings yet. Be the first to post!')
+                st.info('📭 ಇನ್ನೂ ಯಾವುದೇ ಮಾರಾಟಗಾರರ ಪಟ್ಟಿಗಳಿಲ್ಲ. ಮೊದಲಿಗರಾಗಿ ಪ್ರಕಟಿಸಿ!' if is_kn else '📭 No seller listings yet. Be the first to post!')
         except Exception as e:
-            st.info('Listings unavailable (demo mode)')
+            st.info('ಪಟ್ಟಿಗಳು ಲಭ್ಯವಿಲ್ಲ (ಡೇಮೋ ಮೋಡ್)' if is_kn else 'Listings unavailable (demo mode)')
     
     # ============ BUYER TAB ============
     with tab2:
-        st.markdown('### 🛒 Post Your Demand (What You Want to Buy)')
-        st.markdown('Tell sellers what you want and how much you\'re willing to pay. They can contact you!')
+        st.markdown('### 🛒 ನಿಮ್ಮ ಬೇಡಿಕೆ ಪ್ರಕಟಿಸಿ (ನೀವು ಏನು ಖರೀದಿಸಲು ಬಯಸುತ್ತೀರಿ)' if is_kn else '### 🛒 Post Your Demand (What You Want to Buy)')
+        st.markdown('ನೀವು ಏನು ಬೇಕು ಮತ್ತು ಅದಕ್ಕೆ ಎಷ್ಟು ಪಾವತಿಸಲು ಸಿದ್ಧರಿದ್ದೀರಿ ಎಂದು ಮಾರಾಟಗಾರರಿಗೆ ತಿಳಿಸಿ. ಅವರು ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಬಹುದು!' if is_kn else 'Tell sellers what you want and how much you\'re willing to pay. They can contact you!')
         
-        with st.expander('➕ Create a Buyer Demand'):
+        with st.expander('➕ ಖರೀದಿದಾರರ ಬೇಡಿಕೆ ರಚಿಸಿ' if is_kn else '➕ Create a Buyer Demand'):
             with st.form('buyer_form'):
-                st.write("**Your Contact Info**")
-                buyer_name = st.text_input('Your name', key='buyer_name')
-                buyer_phone = st.text_input('Your phone number', key='buyer_phone')
-                buyer_location = st.text_input('Your location', key='buyer_location')
+                st.write("**ನಿಮ್ಮ ಸಂಪರ್ಕ ಮಾಹಿತಿ**" if is_kn else "**Your Contact Info**")
+                buyer_name = st.text_input('ನಿಮ್ಮ ಹೆಸರು' if is_kn else 'Your name', key='buyer_name')
+                buyer_phone = st.text_input('ನಿಮ್ಮ ದೂರವಾಣಿ ಸಂಖ್ಯೆ' if is_kn else 'Your phone number', key='buyer_phone')
+                buyer_location = st.text_input('ನಿಮ್ಮ ಸ್ಥಳ' if is_kn else 'Your location', key='buyer_location')
                 
-                st.write("**What You Want to Buy**")
-                wanted_crop = st.text_input('What crop/product do you want?', key='wanted_crop')
-                wanted_qty = st.number_input('Quantity needed (kg)', min_value=1, key='wanted_qty')
-                max_price = st.number_input('Maximum price you can pay (₹ per kg)', min_value=0.0, format='%.2f', key='max_price')
+                st.write("**ನೀವು ಏನು ಖರೀದಿಸಲು ಬಯಸುತ್ತೀರಿ**" if is_kn else "**What You Want to Buy**")
+                wanted_crop = st.text_input('ಯಾವ ಬೆಳೆ/ಉತ್ಪನ್ನ ಬೇಕು?' if is_kn else 'What crop/product do you want?', key='wanted_crop')
+                wanted_qty = st.number_input('ಬೇಕಾದ ಪ್ರಮಾಣ (ಕೆಜಿ)' if is_kn else 'Quantity needed (kg)', min_value=1, key='wanted_qty')
+                max_price = st.number_input('ನೀವು ಪಾವತಿಸಬಹುದಾದ ಗರಿಷ್ಠ ಬೆಲೆ (₹ ಪ್ರತಿ ಕೆಜಿ)' if is_kn else 'Maximum price you can pay (₹ per kg)', min_value=0.0, format='%.2f', key='max_price')
                 
-                st.write("**Additional Info**")
-                quality_pref = st.selectbox('Quality preference', ['Any', 'Standard', 'Premium'], key='quality_pref')
-                notes = st.text_area('Special requirements (variety, timing, etc.)', key='buyer_notes')
+                st.write("**ಹೆಚ್ಚುವರಿ ಮಾಹಿತಿ**" if is_kn else "**Additional Info**")
+                quality_options = ['Any', 'Standard', 'Premium']
+                quality_pref = st.selectbox(
+                    'ಗುಣಮಟ್ಟದ ಆದ್ಯತೆ' if is_kn else 'Quality preference',
+                    quality_options,
+                    format_func=(lambda x: {'Any': 'ಯಾವುದೇ', 'Standard': 'ಸಾಮಾನ್ಯ', 'Premium': 'ಉನ್ನತ'}.get(x, x)) if is_kn else (lambda x: x),
+                    key='quality_pref'
+                )
+                notes = st.text_area('ವಿಶೇಷ ಅಗತ್ಯಗಳು (ಜಾತಿ, ಸಮಯ ಇತ್ಯಾದಿ)' if is_kn else 'Special requirements (variety, timing, etc.)', key='buyer_notes')
                 
-                post_demand = st.form_submit_button('✅ Post Your Demand (FREE!)')
+                post_demand = st.form_submit_button('✅ ನಿಮ್ಮ ಬೇಡಿಕೆ ಪ್ರಕಟಿಸಿ (ಉಚಿತ!)' if is_kn else '✅ Post Your Demand (FREE!)')
                 if post_demand and buyer_name and buyer_phone and buyer_location and wanted_crop and wanted_qty and max_price:
                     demand = {
                         'type': 'buyer',
@@ -1086,15 +1171,15 @@ elif app_mode == 'Marketplace':
                     }
                     try:
                         db.collection('market_listings').add(demand)
-                        st.success(f'✅ Your demand posted! Farmers with {wanted_crop} can contact you at {buyer_phone}')
+                        st.success(f'✅ ನಿಮ್ಮ ಬೇಡಿಕೆ ಪ್ರಕಟವಾಗಿದೆ! {wanted_crop} ಇರುವ ರೈತರು {buyer_phone} ನಲ್ಲಿ ಸಂಪರ್ಕಿಸಬಹುದು.' if is_kn else f'✅ Your demand posted! Farmers with {wanted_crop} can contact you at {buyer_phone}')
                     except Exception as e:
-                        st.info('Demand saved locally (demo mode)')
+                        st.info('ಬೇಡಿಕೆ ಸ್ಥಳೀಯವಾಗಿ ಉಳಿಸಲಾಗಿದೆ (ಡೇಮೋ ಮೋಡ್)' if is_kn else 'Demand saved locally (demo mode)')
                         st.write(demand)
                 elif post_demand:
-                    st.error('⚠️ Please fill all required fields!')
+                    st.error('⚠️ ದಯವಿಟ್ಟು ಅಗತ್ಯವಿರುವ ಎಲ್ಲ ಕ್ಷೇತ್ರಗಳನ್ನು ತುಂಬಿರಿ!' if is_kn else '⚠️ Please fill all required fields!')
         
         st.markdown('---')
-        st.markdown('### 📋 Current Buyer Demands')
+        st.markdown('### 📋 ಪ್ರಸ್ತುತ ಖರೀದಿದಾರರ ಬೇಡಿಕೆಗಳು' if is_kn else '### 📋 Current Buyer Demands')
         try:
             docs = db.collection('market_listings').where('type', '==', 'buyer').stream()
             demands = [d.to_dict() for d in docs]
@@ -1102,23 +1187,36 @@ elif app_mode == 'Marketplace':
                 for i, demand in enumerate(demands):
                     col1, col2 = st.columns([3, 1])
                     with col1:
-                        st.write(f"**Looking for:** {demand.get('wanted_crop', 'Product')} - {demand.get('wanted_qty')}kg")
-                        st.write(f"**Willing to pay up to:** ₹{demand.get('max_price')}/kg | **Quality:** {demand.get('quality_pref', 'Any')}")
-                        st.write(f"📍 **Buyer location:** {demand.get('buyer_location', 'Unknown')}")
-                        st.write(f"**Buyer:** {demand.get('buyer_name', 'Unknown')} | **Phone:** {demand.get('buyer_phone', 'N/A')}")
+                        st.write(f"**ಹುಡುಕುತ್ತಿರುವುದು:** {demand.get('wanted_crop', 'Product')} - {demand.get('wanted_qty')}kg" if is_kn else f"**Looking for:** {demand.get('wanted_crop', 'Product')} - {demand.get('wanted_qty')}kg")
+                        st.write(f"**ಪಾವತಿಸಲು ಸಿದ್ಧ:** ₹{demand.get('max_price')}/kg | **ಗುಣಮಟ್ಟ:** {demand.get('quality_pref', 'Any')}" if is_kn else f"**Willing to pay up to:** ₹{demand.get('max_price')}/kg | **Quality:** {demand.get('quality_pref', 'Any')}")
+                        st.write(f"📍 **ಖರೀದಿದಾರರ ಸ್ಥಳ:** {demand.get('buyer_location', 'Unknown')}" if is_kn else f"📍 **Buyer location:** {demand.get('buyer_location', 'Unknown')}")
+                        st.write(f"**ಖರೀದಿದಾರ:** {demand.get('buyer_name', 'Unknown')} | **ದೂರವಾಣಿ:** {demand.get('buyer_phone', 'N/A')}" if is_kn else f"**Buyer:** {demand.get('buyer_name', 'Unknown')} | **Phone:** {demand.get('buyer_phone', 'N/A')}")
                         if demand.get('notes'):
-                            st.write(f"**Requirements:** *{demand.get('notes')}*")
+                            st.write(f"**ಅಗತ್ಯಗಳು:** *{demand.get('notes')}*" if is_kn else f"**Requirements:** *{demand.get('notes')}*")
                     with col2:
                         st.write(f"📅 {demand.get('timestamp', 'N/A')[:10]}")
                     st.divider()
             else:
-                st.info('📭 No buyer demands yet. Post one to find sellers!')
+                st.info('📭 ಇನ್ನೂ ಯಾವುದೇ ಖರೀದಿದಾರರ ಬೇಡಿಕೆಗಳಿಲ್ಲ. ಮಾರಾಟಗಾರರನ್ನು ಹುಡುಕಲು ಒಂದು ಬೇಡಿಕೆಯನ್ನು ಪ್ರಕಟಿಸಿ!' if is_kn else '📭 No buyer demands yet. Post one to find sellers!')
         except Exception as e:
-            st.info('Demands unavailable (demo mode)')
+            st.info('ಬೇಡಿಕೆಗಳು ಲಭ್ಯವಿಲ್ಲ (ಡೇಮೋ ಮೋಡ್)' if is_kn else 'Demands unavailable (demo mode)')
     
     st.markdown('---')
-    st.markdown('### ℹ️ How It Works')
+    st.markdown('### ℹ️ ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ' if is_kn else '### ℹ️ How It Works')
     st.markdown('''
+    1. **ರೈತರು/ಮಾರಾಟಗಾರರು:** ನೀವು ಮಾರಲು ಹೊಂದಿರುವುದನ್ನು ಪ್ರಕಟಿಸಿ - ಸಂಪೂರ್ಣ ಉಚಿತ, ಯಾವುದೇ ಕಮಿಷನ್ ಇಲ್ಲ!
+    2. **ಖರೀದಿದಾರರು:** ನಿಮಗೆ ಬೇಕಿರುವುದನ್ನು ಪ್ರಕಟಿಸಿ - ಪ್ರಮಾಣ ಮತ್ತು ಬೆಲೆಯನ್ನು ನಮೂದಿಸಿ.
+    3. **ನೇರ ಸಂಪರ್ಕ:** ಖರೀದಿದಾರರು ಮತ್ತು ಮಾರಾಟಗಾರರು ಪರಸ್ಪರದ ದೂರವಾಣಿ ಸಂಖ್ಯೆಯನ್ನು ನೋಡಿ ನೇರವಾಗಿ ಸಂಪರ್ಕಿಸಬಹುದು.
+    4. **ಚರ್ಚೆ:** ಅಂತಿಮ ಬೆಲೆ ಮತ್ತು ಪ್ರಮಾಣವನ್ನು ಒಪ್ಪಿಕೊಳ್ಳಿ.
+    5. **ನೇರ ವ್ಯವಹಾರ:** ಮಧ್ಯವರ್ತಿ ಇಲ್ಲ, ಶುಲ್ಕಗಳಿಲ್ಲ, ಸಂಪೂರ್ಣ ಲಾಭ ರೈತರಿಗೆ!
+    
+    **ಲಾಭಗಳು:**
+    - 🌾 ರೈತರಿಗೆ ಉತ್ತಮ ಬೆಲೆ ಸಿಗುತ್ತದೆ (ಮಧ್ಯವರ್ತಿ ಇಲ್ಲ)
+    - 💰 ಖರೀದಿದಾರರಿಗೆ ಉತ್ತಮ ದರ ಸಿಗುತ್ತದೆ (ನೇರವಾಗಿ ಕೃಷಿಯಿಂದ)
+    - 📱 ದೂರವಾಣಿ ಸಂಖ್ಯೆಗಳೊಂದಿಗೆ ಸುಲಭ ಸಂವಹನ
+    - ✅ ಸಂಪೂರ್ಣ ಉಚಿತ - ಶೂನ್ಯ ಕಮಿಷನ್
+    - 🤝 ರೈತ-ಖರೀದಿದಾರರ ನೇರ ಸಂಬಂಧ
+    ''' if is_kn else '''
     1. **Farmers/Sellers:** Post what you have to sell - completely FREE, no commission!
     2. **Buyers:** Post what you're looking for - specify quantity and price.
     3. **Direct Contact:** Buyers and sellers can see each other's phone numbers and contact directly.
